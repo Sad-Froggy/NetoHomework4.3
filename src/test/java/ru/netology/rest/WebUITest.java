@@ -47,7 +47,7 @@ public class WebUITest {
         String actualText = actualElement.getText().trim();
         assertTrue(actualElement.isDisplayed());
         assertEquals(
-                "какой-то текст",
+                "Ваша заявка успешно отправлена! Наш менеджер свяжется с вами в ближайшее время.",
                 actualText
         );
     }
@@ -55,7 +55,7 @@ public class WebUITest {
     @Test
     void shouldFailIfPhoneIsTooShort() throws InterruptedException {
         driver.findElement(By.cssSelector("[data-test-id='name'] input")).sendKeys("Лягушеслав Болотин");
-        driver.findElement(By.cssSelector("[data-test-id='phone'] input")).sendKeys("+79999999999");
+        driver.findElement(By.cssSelector("[data-test-id='phone'] input")).sendKeys("+7999999999");
         driver.findElement(By.cssSelector("[data-test-id='agreement']")).click();
         driver.findElement(By.cssSelector("button.button")).click();
         WebElement actualElement = driver
@@ -71,7 +71,7 @@ public class WebUITest {
 
     @Test
     void shouldFailIfNameContainIllegalSymbols() throws InterruptedException {
-        driver.findElement(By.cssSelector("[data-test-id='name'] input")).sendKeys("Лягушеслав Болотин");
+        driver.findElement(By.cssSelector("[data-test-id='name'] input")).sendKeys("Лягушеслав Болотин.....");
         driver.findElement(By.cssSelector("[data-test-id='phone'] input")).sendKeys("+79999999999");
         driver.findElement(By.cssSelector("[data-test-id='agreement']")).click();
         driver.findElement(By.cssSelector("button.button")).click();
