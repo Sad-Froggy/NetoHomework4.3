@@ -37,8 +37,10 @@ public class WebUITest {
         driver = null;
     }
 
+
+
     @Test
-    void shouldSubmitApplication() throws InterruptedException {
+    void shouldSubmitApplication() {
         driver.findElement(By.cssSelector("[data-test-id='name'] input")).sendKeys("Лягушеслав Болотин");
         driver.findElement(By.cssSelector("[data-test-id='phone'] input")).sendKeys("+79999999999");
         driver.findElement(By.cssSelector("[data-test-id='agreement']")).click();
@@ -53,14 +55,13 @@ public class WebUITest {
     }
 
     @Test
-    void shouldFailIfPhoneIsTooShort() throws InterruptedException {
+    void shouldFailIfPhoneIsTooShort() {
         driver.findElement(By.cssSelector("[data-test-id='name'] input")).sendKeys("Лягушеслав Болотин");
         driver.findElement(By.cssSelector("[data-test-id='phone'] input")).sendKeys("+7999999999");
         driver.findElement(By.cssSelector("[data-test-id='agreement']")).click();
         driver.findElement(By.cssSelector("button.button")).click();
         WebElement actualElement = driver
-                .findElement(By.cssSelector("[data-test-id='phone']"))
-                .findElement(By.className("input__sub"));
+                .findElement(By.cssSelector("[data-test-id='phone'].input_invalid .input__sub"));
         String actualText = actualElement.getText().trim();
         assertTrue(actualElement.isDisplayed());
         assertEquals(
@@ -70,14 +71,13 @@ public class WebUITest {
     }
 
     @Test
-    void shouldFailIfNameContainIllegalSymbols() throws InterruptedException {
+    void shouldFailIfNameContainIllegalSymbols() {
         driver.findElement(By.cssSelector("[data-test-id='name'] input")).sendKeys("Лягушеслав Болотин.....");
         driver.findElement(By.cssSelector("[data-test-id='phone'] input")).sendKeys("+79999999999");
         driver.findElement(By.cssSelector("[data-test-id='agreement']")).click();
         driver.findElement(By.cssSelector("button.button")).click();
         WebElement actualElement = driver
-                .findElement(By.cssSelector("[data-test-id='name']"))
-                .findElement(By.className("input__sub"));
+                .findElement(By.cssSelector("[data-test-id='name'].input_invalid .input__sub"));
         String actualText = actualElement.getText().trim();
         assertTrue(actualElement.isDisplayed());
         assertEquals(
@@ -85,4 +85,44 @@ public class WebUITest {
                 actualText
         );
     }
+
+    @Test
+    void shouldFailIfNameIsEmpty() {
+        driver.findElement(By.cssSelector("[data-test-id='phone'] input")).sendKeys("+79999999999");
+        driver.findElement(By.cssSelector("[data-test-id='agreement']")).click();
+        driver.findElement(By.cssSelector("button.button")).click();
+        WebElement actualElement = driver
+                .findElement(By.cssSelector("[data-test-id='name'].input_invalid .input__sub"));
+        String actualText = actualElement.getText().trim();
+        assertTrue(actualElement.isDisplayed());
+        assertEquals(
+                "Поле обязательно для заполнения",
+                actualText
+        );
+    }
+
+    @Test
+    void shouldFailIfPhoneIsEmpty() {
+        driver.findElement(By.cssSelector("[data-test-id='name'] input")).sendKeys("Лягушеслав Болотин");
+        driver.findElement(By.cssSelector("[data-test-id='agreement']")).click();
+        driver.findElement(By.cssSelector("button.button")).click();
+        WebElement actualElement = driver
+                .findElement(By.cssSelector("[data-test-id='phone'].input_invalid .input__sub"));
+        String actualText = actualElement.getText().trim();
+        assertTrue(actualElement.isDisplayed());
+        assertEquals(
+                "Поле обязательно для заполнения",
+                actualText
+        );
+    }
+
+    @Test
+    void shouldFailIfCheckboxIsUnchecked() {
+        driver.findElement(By.cssSelector("[data-test-id='name'] input")).sendKeys("Лягушеслав Болотин");
+        driver.findElement(By.cssSelector("[data-test-id='phone'] input")).sendKeys("+79999999999");
+        driver.findElement(By.cssSelector("button.button")).click();
+        assertTrue(driver.findElement(By.cssSelector("[data-test-id='agreement'].input_invalid")).isDisplayed());
+    }
+
+
 }
